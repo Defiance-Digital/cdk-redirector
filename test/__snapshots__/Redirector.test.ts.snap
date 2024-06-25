@@ -1,0 +1,243 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Redirector snapshots with default props 1`] = `
+{
+  "Outputs": {
+    "RedirectorEndpoint39B84C17": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "RedirectorA15E92ED",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "RedirectorDeploymentStagev12544658A",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "Certificate4E7ABB08": {
+      "Properties": {
+        "DomainName": "someolddomain.com",
+        "DomainValidationOptions": [
+          {
+            "DomainName": "someolddomain.com",
+            "ValidationDomain": "someolddomain.com",
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Stack/Certificate",
+          },
+        ],
+        "ValidationMethod": "EMAIL",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "RedirectorA15E92ED": {
+      "Properties": {
+        "EndpointConfiguration": {
+          "Types": [
+            "REGIONAL",
+          ],
+        },
+        "Name": "Redirector",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "RedirectorAccountB92FA666": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "RedirectorA15E92ED",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "RedirectorCloudWatchRole825AFF89",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "RedirectorCloudWatchRole825AFF89": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "RedirectorCustomDomainC3D1481F": {
+      "Properties": {
+        "DomainName": "someolddomain.com",
+        "EndpointConfiguration": {
+          "Types": [
+            "REGIONAL",
+          ],
+        },
+        "RegionalCertificateArn": {
+          "Ref": "Certificate4E7ABB08",
+        },
+      },
+      "Type": "AWS::ApiGateway::DomainName",
+    },
+    "RedirectorCustomDomainMapStackRedirector14D4840B661510D0": {
+      "Properties": {
+        "DomainName": {
+          "Ref": "RedirectorCustomDomainC3D1481F",
+        },
+        "RestApiId": {
+          "Ref": "RedirectorA15E92ED",
+        },
+        "Stage": {
+          "Ref": "RedirectorDeploymentStagev12544658A",
+        },
+      },
+      "Type": "AWS::ApiGateway::BasePathMapping",
+    },
+    "RedirectorDeployment20B89C48756f86bc017503e7c6f29ea7ee62353b": {
+      "DependsOn": [
+        "RedirectorGET003FDA46",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "RedirectorA15E92ED",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "RedirectorDeploymentStagev12544658A": {
+      "DependsOn": [
+        "RedirectorAccountB92FA666",
+      ],
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "RedirectorDeployment20B89C48756f86bc017503e7c6f29ea7ee62353b",
+        },
+        "RestApiId": {
+          "Ref": "RedirectorA15E92ED",
+        },
+        "StageName": "v1",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "RedirectorGET003FDA46": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Location": "'somenewdomain.com'",
+              },
+              "StatusCode": "302",
+            },
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": "{"statusCode": 302}",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Location": true,
+            },
+            "StatusCode": "302",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "RedirectorA15E92ED",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "RedirectorA15E92ED",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

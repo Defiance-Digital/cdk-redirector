@@ -1,17 +1,27 @@
-import { awscdk } from 'projen';
+import { awscdk, javascript } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
-  author: 'Matthew Bonig',
-  authorAddress: 'matthew.bonig@gmail.com',
-  cdkVersion: '2.1.0',
-  defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.4.0',
-  name: 'redirecter',
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/matthew.bonig/redirecter.git',
-
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
+  author: 'Matthew Bonig',
+  authorAddress: 'matthew.bonig@defiance.ai',
+  cdkVersion: '2.133.0',
+  defaultReleaseBranch: 'main',
+  depsUpgrade: false,
+  homepage: 'https://defiance.ai',
+  name: '@defiance-digital/cdk-redirector',
+  repositoryUrl: 'https://github.com/Defiance-Digital/cdk-redirector.git',
+  description: 'This construct creates a simple API Gateway that can redirect one URL to another.',
+  devDeps: [
+    'eslint',
+    'jsii-rosetta@^5.0.7',
+    'jsii-docgen@^8.0.14',
+  ],
+  githubOptions: { mergify: false },
+  gitignore: ['cdk.out/', 'cdk.context.json', '.idea/'],
+  keywords: ['cdk', 'api-gateway', 'redirect'],
+  integrationTestAutoDiscover: false,
+  releaseToNpm: true,
+  npmAccess: javascript.NpmAccess.PUBLIC,
+  jsiiVersion: '^5.0.7',
+  minNodeVersion: '16.19.0',
 });
 project.synth();

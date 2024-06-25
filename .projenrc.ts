@@ -22,6 +22,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   releaseToNpm: true,
   npmAccess: javascript.NpmAccess.PUBLIC,
   jsiiVersion: '^5.0.7',
-  minNodeVersion: '16.19.0',
+  minNodeVersion: '20.9.0',
 });
 project.synth();
